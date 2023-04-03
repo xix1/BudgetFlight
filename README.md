@@ -13,4 +13,4 @@ EuroBudgetExplorer is a budget travel planning web application for European stud
 * Client Framework: **Vue 3** with **Composition API** will be used as the client-side framework to build a reactive, modular, and maintainable user interface for the application.
 
 * Server Framework/Backend Service Setup: 
- **Django** will be used as the backend framework for creating a RESTful API, handling user authentication, and managing data storage. Django's built-in authentication system and the django-allauth package will be used for user registration, login, and social authentication.
+ **Flask** will be used as the backend framework. Flask provides a solid foundation for building RESTful APIs and allows for easy integration with various third-party services and libraries. It offers the flexibility and simplicity needed for the app.
