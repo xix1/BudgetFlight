@@ -4,7 +4,7 @@
 
 <template>
 <div class="bg-red-200 font-bold">
-  <h3 >test</h3>
+  <h3 >home</h3>
 
 </div>
 </template>
