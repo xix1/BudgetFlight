@@ -1,36 +1,37 @@
 import { defineStore } from 'pinia';
 import router from '@/router/index.js';
 import { auth } from '@/firebase/config.js';
-import { 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    signOut, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    signInWithPopup,
+    GoogleAuthProvider,
     FacebookAuthProvider,
-    onAuthStateChanged 
+    onAuthStateChanged
 } from 'firebase/auth';
 
-
 export const useAuthStore = defineStore("auth", {
-    state: () => ({
-        user: null,
-        email:'',
-        password:'',
-    }),
+    state: () => {
+        return {
+            user: null,
+            errorMessage: '',
+        }
+
+    },
     getters: {
 
     },
     actions: {
-        init(){
+        init() {
             onAuthStateChanged(auth, (user) => {
-                if(user) {
+                if (user) {
                     this.setUser(user);
-                    router.replace({name:'home'})
+                    // router.replace({name:'home'})
                 }
                 else {
                     this.user = {}
-                    router.replace({name:'login'})
+                    router.push({ name: 'home' })
                 }
             })
         },
@@ -38,58 +39,74 @@ export const useAuthStore = defineStore("auth", {
             this.user = user;
         },
 
-        async register(email, password) {
+        async register(email, password) {            
             try {
                 const { user } = await createUserWithEmailAndPassword(auth, email, password);
-                if(user){
-                    this.setUser(user);
-                    
-                    router.replace({name:'home'});
-                }
-            }
-            catch(error) {
-                console.log(error);
-            }
-        },
-        async login(){
-            try {
-                const { user } = await signInWithEmailAndPassword(auth, this.email, this.password);
-                if(user){
-                    router.replace({name:'home'});
+                if (user) {
+                    router.push({ name: 'account' });
                     this.setUser(user);
                 }
             }
             catch (error) {
+                if (error.code === "auth/email-already-in-use") {
+                    console.log(error.code)
+                    this.errorMessage = "This email is already in use. Please try another email.";
+                    console.log(this.errorMessage)
+                } else {
+                    this.errorMessage = "An error occurred. Please try again.";
+                }
+            }
+        },
+        async login(email, password) {            
+            try {
+                const { user } = await signInWithEmailAndPassword(auth, email, password);
+                if (user) {
+                    console.log(user)
+                    this.setUser(user);
+                    router.push({ name: 'account' });
+                }
+            }
+            catch (error) {
                 console.log(error);
+                if (error.code === "auth/wrong-password") {
+                    this.errorMessage = "Wrong password. Please try again.";
+                }
+                else if (error.code === "auth/user-not-found") {
+                    this.errorMessage = "User not found. Please try again.";
+                }
+                 else {
+                    this.errorMessage = "An error occurred. Please try again.";
+                }
             }
         },
         async loginWithGoogle() {
             const provider = new GoogleAuthProvider();
             try {
-              const { user } = await signInWithPopup(auth, provider).user;
-              this.setUser(user);
+                const { user } = await signInWithPopup(auth, provider);
+                if (user) {
+                    console.log(user)
+                    this.setUser(user);
+                    router.push({ name: 'account' });
+                }
             } catch (error) {
-              console.error(error);
+                console.error(error);
             }
-          },
-          async loginWithFacebook() {
+        },
+        async loginWithFacebook() {
             const provider = new FacebookAuthProvider();
             try {
-              const { user } = await signInWithPopup(auth, provider);
-              this.setUser(user);
+                const { user } = await signInWithPopup(auth, provider);
+                this.setUser(user);
+                router.push({ name: 'account' });
             } catch (error) {
-              console.error(error);
+                console.error(error);
             }
-          },
-        async logout(){
+        },
+        async logout() {
             await signOut(auth);
-            router.replace({name:'login'})
-            this.setUser(null);
+            // this.setUser(null);
+
         },
     },
 });
 
-//Listening to user status changes
-auth.onAuthStateChanged((user) => {
-    useAuthStore().$patch({ user });
-  });
