@@ -57,7 +57,7 @@ export const useAuthStore = defineStore("auth", {
                 }
             }
         },
-        async login(email, password) {            
+        async login(email, password) {       
             try {
                 const { user } = await signInWithEmailAndPassword(auth, email, password);
                 if (user) {
