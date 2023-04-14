@@ -43,7 +43,7 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { user } = await createUserWithEmailAndPassword(auth, email, password);
                 if (user) {
-                    router.push({ name: 'account' });
+                    router.push({ name: 'search' });
                     this.setUser(user);
                 }
             }
@@ -63,7 +63,7 @@ export const useAuthStore = defineStore("auth", {
                 if (user) {
                     console.log(user)
                     this.setUser(user);
-                    router.push({ name: 'account' });
+                    router.push({ name: 'search' });
                 }
             }
             catch (error) {
@@ -86,7 +86,7 @@ export const useAuthStore = defineStore("auth", {
                 if (user) {
                     console.log(user)
                     this.setUser(user);
-                    router.push({ name: 'account' });
+                    router.push({ name: 'search' });
                 }
             } catch (error) {
                 console.error(error);
@@ -97,7 +97,7 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { user } = await signInWithPopup(auth, provider);
                 this.setUser(user);
-                router.push({ name: 'account' });
+                router.push({ name: 'search' });
             } catch (error) {
                 console.error(error);
             }

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import AccountView from '../views/AccountView.vue'
+import SearchView from '../views/SearchView.vue'
 import ProfileSection from '../views/account/ProfileSection.vue'
 import { useAuthStore } from '../stores/useAuthStore'
 
@@ -30,9 +31,9 @@ const router = createRouter({
     },
     {
       path: '/login',
-      // beforeEnter: (to, from, next) => {
-      //   useAuthStore().user ? next({name:'account'}) : next()
-      // },
+      //  beforeEnter: (to, from, next) => {
+      //    useAuthStore().user ? next({name:'search'}) : next()
+      //  },
       name: 'login',
       component: Login,
     },
@@ -48,6 +49,14 @@ const router = createRouter({
       // },
       name: 'account',
       component : AccountView,
+    },
+    {
+      path: '/search',
+      // beforeEnter: (to, from, next) => {
+      //   useAuthStore().user ? next('/account/profile/' + useAuthStore().user.uid) : next('/login')
+      // },
+      name: 'search',
+      component : SearchView,
     }
   ]
 })

@@ -11,6 +11,8 @@
     "@firebase/app": "^0.9.7",
     "@firebase/auth": "^0.22.0",
     "@iconify-prerendered/vue-arcticons": "^0.22.1679640835",
+    "@vuepic/vue-datepicker": "^4.3.0",
+    "axios": "^1.3.5",
     "element-plus": "^2.3.2",
     "firebase": "^9.19.1",
     "pinia": "^2.0.32",
