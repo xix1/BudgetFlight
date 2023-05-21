@@ -13,11 +13,15 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/inspirationSearch": {
+      "/getCityID": {
         target: "http://localhost:5000",
         changeOrigin: true,
       },
-      "/getCityID": {
+      "/getFlightDetails": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+      "/inspirationSearch": {
         target: "http://localhost:5000",
         changeOrigin: true,
       },

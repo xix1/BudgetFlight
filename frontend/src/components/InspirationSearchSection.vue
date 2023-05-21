@@ -37,17 +37,29 @@
         </div>
       </form>
 
-      <div class="grid grid-cols-3 gap-4 mt-10">
+      <div v-if="flightDataDetails.length === 0" class="grid grid-cols-3 gap-4 mt-10">
     <div
       v-for="(flight, index) in flightData"
       :key="index"
       class="bg-white rounded-lg p-6 shadow-lg"
     >
       <h3 class="text-xl font-bold">{{ flight.CountryNameEnglish }}</h3>
-      <img :src="flight.ImageUrl" alt="Country image" class="w-full h-64 mt-4 rounded" />
+      <img @click="getFlightDetails(flight.CountryId)" :src="flight.ImageUrl" alt="Country image" class="clickable-image w-full h-64 mt-4 rounded" />
       <p class="mt-4">Price: {{ flight.Price }} {{ flight.CurrencyId }}</p>
     </div>
   </div>
+
+  <div v-else class="grid grid-cols-3 gap-4 mt-10">
+        <div
+          v-for="(flight, index) in flightDataDetails"
+          :key="index"
+          class="bg-white rounded-lg p-6 shadow-lg"
+        >
+          <h3 class="text-xl font-bold">{{ flight.title }}</h3>
+          <img :src="flight.imageUrl" alt="Country image" class="w-full h-64 mt-4 rounded" />
+          <p class="mt-4">Price: {{ flight.price }} {{ flight.currencyId }}</p>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -64,6 +76,7 @@ const returnDate = ref('');
 const cityID = ref('')
 
 const flightData = ref([]);
+const flightDataDetails = ref([]);
 const getCodeByCity = async () => {
     try {
         const response = await axios.get('/getCityID', {
@@ -98,11 +111,44 @@ const fetchInspirationSearch = async () => {
   }
 };
 const handleSubmit = async () => {
+  flightDataDetails.value = []; // clear flightDataDetails
+  flightData.value = [];
+  await getCodeByCity();
   await getCodeByCity();
   await fetchInspirationSearch();
 };
+
+const getFlightDetails = async (CountryId) => {
+  try {
+    const response = await axios.get('/getFlightDetails', {
+      params: {
+        origin: cityID.value,
+        CountryId: CountryId,
+        anytime: anytime.value,
+        oneWay: oneWay.value,
+        travelDate: travelDate.value,
+        returnDate: returnDate.value,
+        currency: 'SEK',
+        countryCode: 'US',
+        market: 'en-US',
+      },
+    });
+    flightDataDetails.value = response.data.data;
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <style lang="scss" scoped>
+.clickable-image {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.clickable-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
 </style>
