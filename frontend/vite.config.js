@@ -17,11 +17,11 @@ export default defineConfig({
         target: "http://localhost:5000",
         changeOrigin: true,
       },
-      "/getFlightDetails": {
+      "/searchFlightEverywhereDetails": {
         target: "http://localhost:5000",
         changeOrigin: true,
       },
-      "/inspirationSearch": {
+      "/searchFlightEverywhere": {
         target: "http://localhost:5000",
         changeOrigin: true,
       },

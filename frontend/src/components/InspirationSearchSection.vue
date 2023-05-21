@@ -37,21 +37,21 @@
         </div>
       </form>
 
-      <div v-if="flightDataDetails.length === 0" class="grid grid-cols-3 gap-4 mt-10">
+      <div v-if="cityFlightData.length === 0" class="grid grid-cols-3 gap-4 mt-10">
     <div
-      v-for="(flight, index) in flightData"
+      v-for="(flight, index) in countryFlightData"
       :key="index"
       class="bg-white rounded-lg p-6 shadow-lg"
     >
       <h3 class="text-xl font-bold">{{ flight.CountryNameEnglish }}</h3>
-      <img @click="getFlightDetails(flight.CountryId)" :src="flight.ImageUrl" alt="Country image" class="clickable-image w-full h-64 mt-4 rounded" />
+      <img @click="searchFlightEverywhereDetails(flight.CountryId)" :src="flight.ImageUrl" alt="Country image" class="clickable-image w-full h-64 mt-4 rounded" />
       <p class="mt-4">Price: {{ flight.Price }} {{ flight.CurrencyId }}</p>
     </div>
   </div>
 
   <div v-else class="grid grid-cols-3 gap-4 mt-10">
         <div
-          v-for="(flight, index) in flightDataDetails"
+          v-for="(flight, index) in cityFlightData"
           :key="index"
           class="bg-white rounded-lg p-6 shadow-lg"
         >
@@ -75,8 +75,8 @@ const travelDate = ref('');
 const returnDate = ref('');
 const cityID = ref('')
 
-const flightData = ref([]);
-const flightDataDetails = ref([]);
+const countryFlightData = ref([]);
+const cityFlightData = ref([]);
 const getCodeByCity = async () => {
     try {
         const response = await axios.get('/getCityID', {
@@ -90,9 +90,9 @@ const getCodeByCity = async () => {
     console.error(error);
 }
 };
-const fetchInspirationSearch = async () => {
+const searchFlightEverywhere = async () => {
   try {
-    const response = await axios.get('/inspirationSearch', {
+    const response = await axios.get('/searchFlightEverywhere', {
       params: {
         origin: cityID.value,
         anytime: anytime.value,
@@ -104,23 +104,22 @@ const fetchInspirationSearch = async () => {
         market: 'en-US',
       },
     });
-    flightData.value = response.data.data;
+    countryFlightData.value = response.data.data;
     console.log(response.data);
   } catch (error) {
     console.error(error);
   }
 };
 const handleSubmit = async () => {
-  flightDataDetails.value = []; // clear flightDataDetails
-  flightData.value = [];
+  cityFlightData.value = []; // clear cityFlightData
+  countryFlightData.value = [];
   await getCodeByCity();
-  await getCodeByCity();
-  await fetchInspirationSearch();
+  await searchFlightEverywhere();
 };
 
-const getFlightDetails = async (CountryId) => {
+const searchFlightEverywhereDetails = async (CountryId) => {
   try {
-    const response = await axios.get('/getFlightDetails', {
+    const response = await axios.get('/searchFlightEverywhereDetails', {
       params: {
         origin: cityID.value,
         CountryId: CountryId,
@@ -133,7 +132,7 @@ const getFlightDetails = async (CountryId) => {
         market: 'en-US',
       },
     });
-    flightDataDetails.value = response.data.data;
+    cityFlightData.value = response.data.data;
     console.log(response.data);
   } catch (error) {
     console.error(error);

@@ -4,8 +4,8 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/inspirationSearch', methods=['GET'])
-def inspiration_search():
+@app.route('/searchFlightEverywhere', methods=['GET'])
+def search_flifht_everywhere():
     query_params = request.args
     api_key = '29edf732b0mshf1361fd6167a4f6p16fde1jsn36fbfe023f6d'
     headers = {
@@ -33,7 +33,7 @@ def get_city_id():
     city_id = json_response["data"][0]["CityId"]
     return jsonify({"CityId": city_id})
 
-@app.route('/getFlightDetails', methods=['GET'])
+@app.route('/searchFlightEverywhereDetails', methods=['GET'])
 def get_flight_details():
     query_params = request.args
     api_key = '29edf732b0mshf1361fd6167a4f6p16fde1jsn36fbfe023f6d'
