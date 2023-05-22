@@ -25,6 +25,10 @@ export default defineConfig({
         target: "http://localhost:5000",
         changeOrigin: true,
       },
+      "/searchFlights": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
     },
     
   },
