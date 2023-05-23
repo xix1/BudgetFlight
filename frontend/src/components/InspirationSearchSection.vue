@@ -73,6 +73,7 @@
               <li v-for="(stop, i) in flight.legs[0].stops" :key="i">{{ stop.name }}</li>
             </ul>
           </div>
+          <button @click.prevent="saveFlight(flight)">Save Flight</button>
         </div>
       </div>
     </div>
@@ -82,6 +83,8 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useAuthStore } from '@/stores/useAuthStore.js';
+
 const anytime = ref(false);
 const oneWay = ref(false);
 const departure = ref('');
@@ -92,6 +95,8 @@ const cityID = ref('')
 const countryFlightData = ref([]);
 const cityFlightData = ref([]);
 const flights = ref([]);
+
+const authStore = useAuthStore();
 
 const getCodeByCity = async () => {
   try {
@@ -175,6 +180,10 @@ const searchFlights = async (destination, date) => {
     console.error(error);
   }
 };
+
+const saveFlight = async (flight) => {
+  await authStore.saveFlight(flight);
+}
 
 </script>
 
