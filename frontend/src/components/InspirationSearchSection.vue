@@ -5,7 +5,7 @@
         <div class="grid grid-cols-5 gap-4">
           <div class="flex items-center space-x-2">
             <label class="block text-sm font-bold">Anytime</label>
-            <input @click="anytime = !anytime" type="checkbox" v-model="anytime" class="w-4 h-4">
+            <input @click="anytime = !anytime; anytime && (travelDate = ''); anytime && (returnDate = '')" type="checkbox" v-model="anytime" class="w-4 h-4">
           </div>
           <div class="flex items-center space-x-2">
             <label class="block text-sm font-bold">One Way</label>
@@ -13,7 +13,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <label class="block text-sm font-bold">Inspiration Search</label>
-            <input @click="inspirationSearch = !inspirationSearch" type="checkbox" v-model="inspirationSearch" class="w-4 h-4">
+            <input @click="inspirationSearch = !inspirationSearch; inspirationSearch && (destination = '')" type="checkbox" v-model="inspirationSearch" class="w-4 h-4">
           </div>
         </div>
         <div class="grid grid-cols-4 gap-4">
@@ -68,14 +68,14 @@
   <div v-for="(flight, index) in flights" :key="index" class="bg-white rounded-lg p-6 shadow-lg mb-4">
     <h3 class="text-xl font-bold">Flight {{ index + 1 }}</h3>
     
-    <h4 class="text-lg font-bold">Outbound Flight:</h4>
+    <h4 v-if="flight.legs[1]" class="text-lg font-bold">Outbound Flight:</h4>
     <p>Departure: {{ flight.legs[0].departure }}</p>
     <p>Arrival: {{ flight.legs[0].arrival }}</p>
     <p>Origin: {{ flight.legs[0].origin.name }} - {{ flight.legs[0].origin.display_code }}</p>
     <p>Destination: {{ flight.legs[0].destination.name }} - {{ flight.legs[0].destination.display_code }}</p>
     <p>Carrier: {{ flight.legs[0].carriers[0].name }}</p>
     <p>Duration: {{ flight.legs[0].duration }} minutes</p>
-    <p>Stop Count: {{ flight.legs[0].stop_count }}</p>
+    <p v-if="flight.legs[0].stop_count == 0">Direct flight</p>
     <div v-if="flight.legs[0].stop_count > 0">
       <p>Stops:</p>
       <ul>
@@ -83,7 +83,7 @@
       </ul>
     </div>
     
-    <div v-if="!oneWay">
+    <div v-if="flight.legs[1]">
       <h4 class="text-lg font-bold">Return Flight:</h4>
       <p>Departure: {{ flight.legs[1].departure }}</p>
       <p>Arrival: {{ flight.legs[1].arrival }}</p>
