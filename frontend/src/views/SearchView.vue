@@ -2,15 +2,15 @@
 import { ref } from 'vue';
 
 import NavbarView from "@/components/NavbarView.vue"
-import InspirationSearchSection from '@/components/InspirationSearchSection.vue';
-import SpecificSearchSection from '@/components/SpecificSearchSection.vue';
+import FlightSearchSection from '@/components/FlightSearchSection.vue';
+import ShibaInuSection from '@/components/ShibaInuSection.vue';
 
-const isInspirationSearch = ref(true);
-const switchToInspirationSearch = () => {
-    isInspirationSearch.value = true;
+const isFlightSearch = ref(true);
+const switchToFlightSearch = () => {
+    isFlightSearch.value = true;
 };
-const switchToSpecificSearch = () => {
-    isInspirationSearch.value = false;
+const switchToShibaInu = () => {
+    isFlightSearch.value = false;
 };
 
 
@@ -20,17 +20,17 @@ const switchToSpecificSearch = () => {
     <NavbarView />
     <div>
         <div class="flex justify-center space-x-4 mt-4">
-            <button @click="switchToInspirationSearch"
+            <button @click="switchToFlightSearch"
                 class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded shadow-md">
-                Inspiration Search
+                Flight Search
             </button>
-            <button @click="switchToSpecificSearch"
-                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded shadow-md">
-                Specific Search
+            <button @click="switchToShibaInu"
+                class="px-4 py-2 bg-orange-400 hover:bg-orange-500 text-white font-bold rounded shadow-md">
+                Have some Shiba Inu
             </button>
         </div>
-        <InspirationSearchSection v-show="isInspirationSearch" />
-        <SpecificSearchSection v-show="!isInspirationSearch" />
+        <FlightSearchSection v-show="isFlightSearch" />
+        <ShibaInuSection v-show="!isFlightSearch" />
     </div>
     <div id="videoDarkOverlay"></div>
     <video autoplay muted loop id="myVideo">

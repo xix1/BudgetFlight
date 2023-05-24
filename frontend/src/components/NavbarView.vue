@@ -20,7 +20,7 @@ const handleLogOut = () => {
         <BackToHomeIcon />
       </div>
       <div v-if="user" class="flex space-x-8 ">
-        <router-link to="/account" class="text-white font-bold text-2xl">{{ user.email }}</router-link>
+        <router-link to="/account" class="text-white hover:text-blue-700 font-bold text-2xl">{{ user.email }}</router-link>
         <button
           @click.prevent="handleLogOut"
           class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

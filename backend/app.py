@@ -61,5 +61,13 @@ def search_flights():
 
     return jsonify(response.json())
 
+@app.route('/getShibaInu', methods=['GET'])
+def get_shibainu():
+    url = 'http://shibe.online/api/shibes?count=1'
+    
+    response = requests.get(url)
+
+    return jsonify(response.json())
+
 if __name__ == '__main__':
     app.run(debug=True)
