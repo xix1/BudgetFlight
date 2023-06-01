@@ -15,7 +15,7 @@
             <div class="text-right">
               <div class="font-bold text-lg">{{ new Date(flight.legs[0].arrival).toLocaleTimeString('en-US', { hour:
                 '2-digit', minute: '2-digit', hour12: false }) }}</div>
-              <div class="text-sm text-gray-500" :title="flight.legs[1].destination.name">{{flight.legs[1].destination.display_code }}</div>
+              <div class="text-sm text-gray-500" :title="flight.legs[0].destination.name">{{flight.legs[0].destination.display_code }}</div>
             </div>
           </div>
           <div v-if=" flight.legs[1] " class="flex justify-between mb-4">
@@ -51,7 +51,8 @@
 import { defineProps } from 'vue';
 
 const props = defineProps({
-  flights: Array
+  flights: Array,
+  saveFlight: Function
 });
 </script>
 

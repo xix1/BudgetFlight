@@ -69,7 +69,7 @@
       </div>
 
       <div v-if=" flights.length " class="container mx-auto px-2 sm:px-0">
-        <FlightDataSection :flights="flights" />
+        <FlightDataSection :flights="flights" :save-flight="saveFlight"/>
       </div>
     </div>
 
