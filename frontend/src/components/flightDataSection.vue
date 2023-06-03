@@ -43,6 +43,8 @@
             
             <button v-if="saveFlight" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
               @click.prevent=" saveFlight(flight) ">Save Flight</button>
+              <button v-if="deleteFlight" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4"
+          @click.prevent="deleteFlight(flight.id)">Delete Flight</button>
           </div>
         </div>
 </template>
@@ -52,7 +54,8 @@ import { defineProps } from 'vue';
 
 const props = defineProps({
   flights: Array,
-  saveFlight: Function
+  saveFlight: Function,
+  deleteFlight: Function
 });
 </script>
 

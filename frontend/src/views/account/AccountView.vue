@@ -1,7 +1,7 @@
 <script setup>
 import NavbarView from "@/components/NavbarView.vue"
 import FlightDataSection from '@/components/FlightDataSection.vue';
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import { ref, onMounted } from 'vue';
 import { auth, db } from '@/firebase/config.js';
 
@@ -19,6 +19,14 @@ onMounted(async () => {
     });
 });
 
+async function deleteFlight(flightId) {
+    const userId = auth.currentUser.uid;
+    const flightRef = doc(db, 'users', userId, 'flights', flightId);
+    await deleteDoc(flightRef);
+
+    userFlights.value = userFlights.value.filter(flight => flight.id !== flightId);
+}
+
 </script>
 
 <template>
@@ -33,7 +41,7 @@ onMounted(async () => {
         <div class="bg-white rounded-lg p-6 shadow-lg">
             <div>
                 <h2>Your flights</h2>
-                <FlightDataSection :flights="userFlights" />
+                <FlightDataSection :flights="userFlights" :deleteFlight="deleteFlight" />
             </div>
         </div>
     </div>
