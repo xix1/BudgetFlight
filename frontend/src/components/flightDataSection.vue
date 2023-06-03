@@ -41,7 +41,7 @@
             <p class=" text-gray-500">Price: {{ flight.price.amount }} SEK</p>
             </div>
             
-            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
+            <button v-if="saveFlight" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
               @click.prevent=" saveFlight(flight) ">Save Flight</button>
           </div>
         </div>
