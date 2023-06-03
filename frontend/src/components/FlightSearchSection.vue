@@ -21,20 +21,32 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div>
-            <label class="block text-sm font-bold">Departure</label>
-            <input type="text" v-model=" departure " class="border p-2 rounded" required>
+            <label class="block text-sm font-bold">
+              <Icon icon="carbon:departure" color="black" width="24" />
+            </label>
+            <input type="text" v-model=" departure " class="border p-2 rounded" placeholder="from..." required>
           </div>
           <div>
-            <label class="block text-sm font-bold">Destination</label>
+            <label class="block text-sm font-bold">
+              <Icon icon="carbon:arrival" color="black" width="24" />
+            </label>
             <input :disabled=" inspirationSearch " type="text" v-model=" destination " class="border p-2 rounded"
-              required>
+              placeholder="to..." required>
           </div>
           <div>
-            <label class="block text-sm font-bold">Travel Date</label>
+            <label class="block text-sm font-bold">
+              <Icon
+                icon="streamline:travel-airport-departure-time-travel-plane-trip-airplane-time-off-adventure-timer-take-clock"
+                color="black" width="24" />
+            </label>
             <input :disabled=" anytime " type="date" v-model=" travelDate " id="travelDate" class="border p-2 rounded">
           </div>
           <div>
-            <label class="block text-sm font-bold">Return Date</label>
+            <label class="block text-sm font-bold">
+              <Icon
+                icon="streamline:travel-airport-arrival-time-plane-airplane-trip-land-travel-time-adventure-timer-clock"
+                color="black" width="24" />
+            </label>
             <input :disabled=" anytime || oneWay " type="date" v-model=" returnDate " id="returnDate"
               class="border p-2 rounded">
           </div>
@@ -46,31 +58,53 @@
             Search
           </button>
         </div>
+        <div v-if=" showSpinner " class="flex justify-center items-center">
+          <Icon icon="svg-spinners:bars-rotate-fade" color="#367" width="24" />
+        </div>
+
+
       </form>
 
-      <div v-if=" cityFlightData.length === 0 && flights.length === 0 " class="grid grid-cols-3 gap-4 mt-10">
-        <div v-for="(      flight, index      ) in       countryFlightData      " :key=" index "
+      <div v-if=" !cityFlightData.value && !flights.value " class="grid grid-cols-3 gap-4 mt-10">
+        <div v-for="(   flight, index   ) in   countryFlightData.value  " :key=" index "
           class="bg-white rounded-lg p-6 shadow-lg">
           <h3 class="text-xl font-bold">{{ flight.CountryNameEnglish }}</h3>
-          <img @click=" searchFlightEverywhereDetails(flight.CountryId) " :src=" flight.ImageUrl " alt="Country image"
-            class="clickable-image w-full h-64 mt-4 rounded" />
+          <img @click="
+            flightSto.searchFlightEverywhereDetails(flight.CountryId, {
+              anytime: anytime,
+              oneWay: oneWay,
+              travelDate: travelDate,
+              returnDate: returnDate,
+              currency: 'SEK',
+              countryCode: 'US',
+              market: 'en-US',
+            })
+          " :src=" flight.ImageUrl " alt="Country image" class="clickable-image w-full h-64 mt-4 rounded" />
           <p class="mt-4">Price: {{ flight.Price }} {{ flight.CurrencyId }}</p>
         </div>
       </div>
 
-      <div v-if=" cityFlightData.length !== 0 && flights.length === 0 " class="grid grid-cols-3 gap-4 mt-10">
-        <div v-for="(      flight, index      ) in       cityFlightData      " :key=" index "
+      <div v-if=" cityFlightData.value && !flights.value " class="grid grid-cols-3 gap-4 mt-10">
+        <div v-for="(   flight, index   ) in cityFlightData.value " :key=" index "
           class="bg-white rounded-lg p-6 shadow-lg">
           <h3 class="text-xl font-bold">{{ flight.title }}</h3>
-          <img @click=" searchFlights(flight.destinationPlaceId, flight.outboundDepartureDate) " :src=" flight.imageUrl "
-            alt="Country image" class="clickable-image w-full h-64 mt-4 rounded" />
+          <img @click="
+            flightSto.searchFlights(flight.destinationPlaceId, flight.outboundDepartureDate, {
+              returnDate: returnDate,
+              oneWay: oneWay,
+              currency: 'SEK',
+              countryCode: 'US',
+              market: 'en-US',
+            })
+          " :src=" flight.imageUrl " alt="Country image" class="clickable-image w-full h-64 mt-4 rounded" />
           <p class="mt-4">Price: {{ flight.price }} {{ flight.currencyId }}</p>
         </div>
       </div>
 
-      <div v-if=" flights.length " class="container mx-auto px-2 sm:px-0">
-        <FlightDataSection :flights="flights" :save-flight="saveFlight"/>
+      <div v-if=" flights.value " class="container mx-auto px-2 sm:px-0">
+        <FlightDataSection :flights=" flights.value " :save-flight=" saveFlight " />
       </div>
+
     </div>
 
 
@@ -78,125 +112,72 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-import { useAuthStore } from '@/stores/useAuthStore.js';
-import FlightDataSection from '@/components/FlightDataSection.vue';
+import { ref, computed } from "vue";
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from "@/stores/useAuthStore.js";
+import FlightDataSection from "@/components/FlightDataSection.vue";
+import { flightStore } from "@/stores/flightStore.js";
 
+import { Icon } from "@iconify/vue";
+
+const flightSto = flightStore();
+const { user, errorMessage, countryFlightData, cityFlightData, flights, savedFlights, cityID } = storeToRefs(flightSto);
 const anytime = ref(false);
 const oneWay = ref(false);
 const inspirationSearch = ref(false);
+const isSearching = ref(false);
+const showSpinner = computed(
+  () =>
+    isSearching.value &&
+    flightSto.countryFlightData.length === 0 &&
+    flightSto.cityFlightData.length === 0 &&
+    flightSto.flights.length === 0
+);
 
-const departure = ref('');
-const destination = ref('');
-const travelDate = ref('');
-const returnDate = ref('');
-const cityID = ref('')
-
-const countryFlightData = ref([]);
-const cityFlightData = ref([]);
-const flights = ref([]);
-
+const departure = ref("");
+const destination = ref("");
+const travelDate = ref("");
+const returnDate = ref("");
 const authStore = useAuthStore();
 
-const getCodeByCity = async () => {
-  try {
-    const response = await axios.get('/getCityID', {
-      params: {
-        query: departure.value
-      },
-    });
-    cityID.value = response.data.CityId;
-    console.log(cityID.value);
-  } catch (error) {
-    console.error(error);
-  }
-};
-const searchFlightEverywhere = async () => {
-  try {
-    const response = await axios.get('/searchFlightEverywhere', {
-      params: {
-        origin: cityID.value,
-        anytime: anytime.value,
-        oneWay: oneWay.value,
-        travelDate: travelDate.value,
-        returnDate: returnDate.value,
-        currency: 'SEK',
-        countryCode: 'US',
-        market: 'en-US',
-      },
-    });
-    countryFlightData.value = response.data.data;
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
 const handleSubmit = async () => {
-  cityFlightData.value = []; // clear cityFlightData
-  countryFlightData.value = [];
-  flights.value = [];
-  await getCodeByCity();
+  flightSto.cityFlightData = []; // clear cityFlightData
+  flightSto.countryFlightData = [];
+  flightSto.flights = [];
+
+  isSearching.value = true;
+
+  await flightSto.getCodeByCity(departure.value);
   if (inspirationSearch.value) {
-    await searchFlightEverywhere();
-  }
-  else {
-    await searchFlights(destination.value, travelDate.value, returnDate.value);
-  }
-
-};
-
-const searchFlightEverywhereDetails = async (CountryId) => {
-  try {
-    const response = await axios.get('/searchFlightEverywhereDetails', {
-      params: {
-        origin: cityID.value,
-        CountryId: CountryId,
-        anytime: anytime.value,
-        oneWay: oneWay.value,
-        travelDate: travelDate.value,
-        returnDate: returnDate.value,
-        currency: 'SEK',
-        countryCode: 'US',
-        market: 'en-US',
-      },
-    });
-    cityFlightData.value = response.data.data;
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const searchFlights = async (destination, date, returnDate) => {
-  try {
-    const params = {
-      origin: cityID.value,
-      destination: destination,
-      date: date,
-      returnDate: returnDate,
+    await flightSto.searchFlightEverywhere(flightSto.cityID, {
+      anytime: anytime.value,
       oneWay: oneWay.value,
+      travelDate: travelDate.value,
+      returnDate: returnDate.value,
       currency: 'SEK',
       countryCode: 'US',
       market: 'en-US',
-    };
-    if (!oneWay.value) {
-      params.returnDate = returnDate;
-    }
-
-    const response = await axios.get('/searchFlights', { params });
-    flights.value = response.data.data;
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
+    });
+    console.log(flightSto.countryFlightData);
+  } else {
+    await flightSto.searchFlights(destination.value, travelDate.value, returnDate.value);
   }
+
+  isSearching.value = false;
 };
 
 const saveFlight = async (flight) => {
-  await authStore.saveFlight(flight);
-}
+  try {
+    await flightSto.saveFlight(flight);
+  } catch (error) {
+    console.error(error);
+  }
+  
+};
 
 </script>
+
+
 
 <style lang="scss" scoped>
 .clickable-image {
@@ -208,6 +189,4 @@ const saveFlight = async (flight) => {
   transform: scale(1.05);
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
 }
-
-
 </style>

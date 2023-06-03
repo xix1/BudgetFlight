@@ -1,30 +1,19 @@
 <script setup>
 import NavbarView from "@/components/NavbarView.vue"
 import FlightDataSection from '@/components/FlightDataSection.vue';
-import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import { ref, onMounted } from 'vue';
-import { auth, db } from '@/firebase/config.js';
+import { useAuthStore } from '@/stores/useAuthStore.js';
+import { flightStore } from "@/stores/flightStore.js";
 
-const userFlights = ref([]);
+const flightSto = flightStore();
+const authStore = useAuthStore();
 
 onMounted(async () => {
-    const userId = auth.currentUser.uid;
-    const flightsCollection = collection(db, 'users', userId, 'flights');
-    const flightSnapshot = await getDocs(flightsCollection);
-
-    flightSnapshot.forEach(doc => {
-        let flight = doc.data();
-        flight.id = doc.id;
-        userFlights.value.push(flight);
-    });
+    await flightSto.fetchUserFlights();
 });
 
-async function deleteFlight(flightId) {
-    const userId = auth.currentUser.uid;
-    const flightRef = doc(db, 'users', userId, 'flights', flightId);
-    await deleteDoc(flightRef);
-
-    userFlights.value = userFlights.value.filter(flight => flight.id !== flightId);
+const deleteFlight = async (flightId) => {
+    await flightSto.deleteFlight(flightId);
 }
 
 </script>
@@ -32,7 +21,6 @@ async function deleteFlight(flightId) {
 <template>
     <NavbarView />
 
-    <div id="videoDarkOverlay"></div>
     <video autoplay muted loop id="myVideo">
         <source src="../../../public/sea-30985.mp4" type="video/mp4">
     </video>
@@ -40,8 +28,7 @@ async function deleteFlight(flightId) {
 
         <div class="bg-white rounded-lg p-6 shadow-lg">
             <div>
-                <h2>Your flights</h2>
-                <FlightDataSection :flights="userFlights" :deleteFlight="deleteFlight" />
+                <FlightDataSection :flights="flightSto.savedFlights" :deleteFlight="deleteFlight" />
             </div>
         </div>
     </div>

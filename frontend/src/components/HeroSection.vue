@@ -2,10 +2,10 @@
     <div id="centerCallToAction" class="max-w-5xl">
         <div class="px-4 md:w-3/4 lg:w-2/3 mx-auto text-center">
             <h1 class="text-4xl sm:text-5xl md:text-5xl leading-tight text-center text-gray-100 mb-3">
-                <b>EuroBudgetExplorer</b>
+                <b>ShiBudgetExplorer</b>
             </h1>
-            <p class="pt-2 text-xl text-center text-gray-300">
-                Discover Europe on a Budget Now
+            <p class="pt-2 text-xl text-center text-white">
+                Discover Flight Budget and Shiba Inu Now
             </p>
             
         </div>
@@ -57,7 +57,6 @@
     </div>
 
     <div id="videoDarkOverlay"></div>
-
     <video autoplay muted loop id="myVideo">
         <source src="../../../public/venice-28303.mp4" type="video/mp4">
     </video>
@@ -97,4 +96,5 @@
         z-index: -1;
         background-color: rgba(0,0,0,0.65);
     }
+
 </style>

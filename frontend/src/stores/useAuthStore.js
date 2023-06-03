@@ -11,8 +11,7 @@ import {
     onAuthStateChanged
 } from 'firebase/auth';
 
-import { doc, setDoc } from "firebase/firestore";
-import { db } from '@/firebase/config.js';
+
 
 export const useAuthStore = defineStore("auth", {
     state: () => {
@@ -28,6 +27,7 @@ export const useAuthStore = defineStore("auth", {
     actions: {
         init() {
             onAuthStateChanged(auth, (user) => {
+                this.errorMessage = ''
                 if (user) {
                     this.setUser(user);
                     // router.replace({name:'home'})
@@ -110,16 +110,7 @@ export const useAuthStore = defineStore("auth", {
             // this.setUser(null);
 
         },
-        async saveFlight(flightData) {
-            if (!this.user) {
-                throw new Error('User must be logged in to save flight.');
-            }
-
-            const userDoc = doc(db, 'users', this.user.uid);
-            const flightDoc = doc(userDoc, 'flights', flightData.id);
-
-            await setDoc(flightDoc, flightData);
-        },
+        
     },
 });
 

@@ -11,7 +11,12 @@ app.use(router)
 app.use(ElementPlus)
 
 import { useAuthStore } from './stores/useAuthStore';
-const store = useAuthStore();
-store.init();
+import { flightStore } from './stores/flightStore';
+const authStore = useAuthStore();
+authStore.init();
+
+const flight = flightStore();
+flight.init();
+flight.fetchUserFlights();
 
 app.mount('#app')

@@ -17,8 +17,6 @@
           Wilderness without Shiba Inu...
         </div>
 
-
-
       </form>
     </div>
   </div>

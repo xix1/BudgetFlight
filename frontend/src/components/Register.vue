@@ -62,7 +62,6 @@ const register = async () => {
       </div>
     </form>
   </div>
-  <div id="videoDarkOverlay"></div>
   <video autoplay muted loop id="myVideo">
     <source src="../../../public/gondola-41832.mp4" type="video/mp4">
   </video>

@@ -4,7 +4,7 @@
         to="/"
         class="text-white text-2xl font-bold bg-transparent hover:text-blue-700"
       >
-        EuroBudget <br>
+        ShiBudget <br>
         Explorer
       </router-link>
     </div>

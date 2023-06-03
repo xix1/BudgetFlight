@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore.js';
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import BackToHomeIcon from './BackToHomeIcon.vue';
+import { Icon } from '@iconify/vue';
 
 const authStore = useAuthStore();
 const { user, errorMessage } = storeToRefs(authStore);
@@ -18,7 +19,7 @@ const loginWithGoogle = async () => {
 };
 
 
-  
+
 </script>
 
 <template>
@@ -28,59 +29,33 @@ const loginWithGoogle = async () => {
       <h3>Login</h3>
     </div>
 
-  <form @submit.prevent="login"
-  class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2 lg:w-1/3">
-  <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="email"
-        >
+    <form @submit.prevent="login" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2 lg:w-1/3">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
           Email
         </label>
-        <input
-          v-model="email"
-          type="email"
-          placeholder="Email"
-          autocomplete="off"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+        <input v-model="email" type="email" placeholder="Email" autocomplete="off"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
       </div>
       <div class="mb-6">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="password"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
           Password
         </label>
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          autocomplete="off"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-        />
+        <input v-model="password" type="password" placeholder="Password" autocomplete="off"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
       </div>
       <div class="flex items-center justify-between">
-        <button
-          type="submit"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
+        <button type="submit"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Login
         </button>
-        <button
-          @click="loginWithGoogle"
-          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Login with Google
+        <button @click="loginWithGoogle">
+          <Icon icon="flat-color-icons:google" color="white" width="34" />
         </button>
       </div>
       <p class="text-center text-md text-gray-900 mt-4">
         Don't have an account yet?
-        <router-link
-          to="register"
-          class="text-blue-500 no-underline hover:underline"
-          @click="errorMessage = ''"
-        >
+        <router-link to="register" class="text-blue-500 no-underline hover:underline" @click="errorMessage = ''">
           Register
         </router-link>
       </p>
@@ -90,10 +65,9 @@ const loginWithGoogle = async () => {
         <strong class="font-bold">Error! </strong>
         <span class="block sm:inline">{{ errorMessage }}</span>
       </div>
-  </form>
-</div>
-<div id="videoDarkOverlay"></div>
-<video autoplay muted loop id="myVideo">
-        <source src="../../../public/gondola-41832.mp4" type="video/mp4">
-    </video>
+    </form>
+  </div>
+  <video autoplay muted loop id="myVideo">
+    <source src="../../../public/gondola-41832.mp4" type="video/mp4">
+  </video>
 </template>
