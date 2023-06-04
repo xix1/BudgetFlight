@@ -1,3 +1,6 @@
+* Project Screencast: https://1drv.ms/v/s!Au-fZKCPNoW8gUAuZCB_sx7p7qXQ?e=8GtZbM
+* Code Screencast: https://1drv.ms/v/s!Au-fZKCPNoW8gT-zs0tjRsY6iajf?e=Wx3TiM
+
 # Functional Specification
 * Project Vision: 
 ShiBudgetExplorer is a travel planning web application offers an intuitive way for users to search for available flights based on their specific requirements or simply receive recommendations for low-cost flights based on their chosen departure point. Beyond its travel planning features, ShiBudgetExplorer also includes a delightful little feature for users who need a quick, light-hearted break: a gallery of Shiba Inu photos, accessible at just the click of a button. Through its user-friendly interface, efficient functionality, and a touch of fun, ShiBudgetExplorer aims to provide an engaging, useful, and enjoyable experience for all users.
